@@ -5,8 +5,20 @@ const ResumeSchema = new mongoose.Schema({
   name: String,
   email: String,
   phone: String,
-  education: Array,
-  experience: Array,
+  education: [
+    {
+      degree: String,
+      institute: String,
+      year: String,
+    },
+  ],
+  experience: [
+    {
+      title: String,
+      company: String,
+      years: String,
+    },
+  ],
   skills: [String],
 });
 

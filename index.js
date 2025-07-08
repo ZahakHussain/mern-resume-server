@@ -39,10 +39,10 @@ function authMiddleware(req, res, next) {
 
 // Register route
 app.post("/api/register", async (req, res) => {
-  console.log("Register request:", req.body); // 🔍 log
-  const { email, password } = req.body; 
+  // console.log("Register request:", req.body); // 🔍 log
+  const { name, email, password } = req.body; 
 
-  if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
+  if ( !name || !email || !password) return res.status(400).json({ message: "All fields are required" });
 
   const existingUser = await User.findOne({ email });
   if (existingUser) return res.status(400).json({ message: "User already exists" })

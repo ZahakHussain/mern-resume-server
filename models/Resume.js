@@ -1,5 +1,4 @@
-// === Backend: server/models/Resume.js ===
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const ResumeSchema = new mongoose.Schema({
   name: String,
@@ -22,4 +21,4 @@ const ResumeSchema = new mongoose.Schema({
   skills: [String],
 });
 
-module.exports = mongoose.model("Resume", ResumeSchema);
+module.exports = mongoose.model('Resume', ResumeSchema);

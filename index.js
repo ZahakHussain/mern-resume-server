@@ -23,7 +23,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 
 // Middleware to check token
-function authMiddleware(req, res, next) {
+const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization;
 
   if (!token) return res.status(401).json({ message: "Access denied. No token." });
@@ -79,6 +79,8 @@ app.get("/api/resumes", authMiddleware, async (req, res) => {
 });
 
 app.post("/api/resumes", authMiddleware, async (req, res) => {
+  console.log('User ID from token:', req.userId);
+  console.log('Resume data payload:', req.body);
   const resume = new Resume({ ...req.body, userId : req.user.userId}); // Attach user ID
   await resume.save();
   res.json(resume);

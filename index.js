@@ -86,5 +86,18 @@ app.post("/api/resumes", authMiddleware, async (req, res) => {
   res.json(resume);
 });
 
+app.delete("/api/resumes/:id", authMiddleware, async (req, res) => {
+  const resume = await Resume.findOneAndDelete({ _id: req.params.id, userId: req.user.userId });
+  if (!resume) return res.status(404).json({ message: "Resume not found" });
+  res.json({ message: "Resume deleted" });
+});
+
+// app.delete("/api/resumes/:id", authMiddleware, async (req, res) => {
+//   const { id } = req.params;
+//   const deleted = await Resume.findOneAndDelete({ _id: id, userId: req.user.userId });
+//   if (!deleted) return res.status(404).json({ message: "Resume not found" });
+//   res.json({ message: "Resume deleted" });
+// });
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -79,7 +79,7 @@ app.get("/api/resumes", authMiddleware, async (req, res) => {
 });
 
 app.post("/api/resumes", authMiddleware, async (req, res) => {
-  console.log('User ID from token:', req.userId);
+  console.log('User ID from token:', req.user.userId);
   console.log('Resume data payload:', req.body);
   const resume = new Resume({ ...req.body, userId : req.user.userId}); // Attach user ID
   await resume.save();

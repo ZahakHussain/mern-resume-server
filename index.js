@@ -40,13 +40,13 @@ const authMiddleware = (req, res, next) => {
 // Register route
 app.post("/api/register", async (req, res) => {
   // console.log("Register request:", req.body); // 🔍 log
-  const { email, password } = req.body; 
+  const { email, password } = req.body;
 
-  if ( !email || !password) return res.status(400).json({ message: "All fields are required" });
+  if (!email || !password) return res.status(400).json({ message: "All fields are required" });
 
   const existingUser = await User.findOne({ email });
   if (existingUser) return res.status(400).json({ message: "User already exists" })
-    // navigate("/login");
+  // navigate("/login");
 
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,22 +74,28 @@ app.post("/api/login", async (req, res) => {
 // API routes
 app.get("/api/resumes", authMiddleware, async (req, res) => {
   const userId = req.user.userId; // From token
-  const resumes = await Resume.find( {userId} ); // (Optional: filter by req.user.userId)
+  const resumes = await Resume.find({ userId }); // (Optional: filter by req.user.userId)
   res.json(resumes);
 });
 
 app.post("/api/resumes", authMiddleware, async (req, res) => {
   console.log('User ID from token:', req.user.userId);
   console.log('Resume data payload:', req.body);
-  const resume = new Resume({ ...req.body, userId : req.user.userId}); // Attach user ID
+  const resume = new Resume({ ...req.body, userId: req.user.userId }); // Attach user ID
   await resume.save();
   res.json(resume);
 });
 
 app.delete("/api/resumes/:id", authMiddleware, async (req, res) => {
-  const resume = await Resume.findOneAndDelete({ _id: req.params.id, userId: req.user.userId });
-  if (!resume) return res.status(404).json({ message: "Resume not found" });
-  res.json({ message: "Resume deleted" });
+  try {
+    const resume = await Resume.findOneAndDelete({ _id: req.params.id, userId: req.user.userId }); // 🔒 Only allow deleting own resume
+    if (!resume) return res.status(404).json({ message: "Resume not found" });
+    res.json({ message: "Resume deleted" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // app.delete("/api/resumes/:id", authMiddleware, async (req, res) => {

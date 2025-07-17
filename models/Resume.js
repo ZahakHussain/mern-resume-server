@@ -19,6 +19,11 @@ const ResumeSchema = new mongoose.Schema({
     },
   ],
   skills: [String],
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // Optional, for population
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Resume', ResumeSchema);
